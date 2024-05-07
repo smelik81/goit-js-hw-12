@@ -31,8 +31,8 @@ async function handleSubmit(event) {
     event.preventDefault();
    
     inputSearchValue = formSearch.elements.picture.value.trim();
-    loader.classList.remove('.hide');
     list.innerHTML = "";
+    loader.classList.remove('.hide');
     
     try {
         const data = await searchPhoto(inputSearchValue, page);
@@ -41,7 +41,7 @@ async function handleSubmit(event) {
                title: 'Error',
                message: 'Sorry, your request is not correct. Please try again!',
              });
-             loader.classList.add('hide');
+            
              return;
         } else {
           list.insertAdjacentHTML('beforeend', createMarkup(data.hits));
@@ -62,10 +62,10 @@ async function handleSubmit(event) {
             messageColor: 'white',
             timeout: 2000,
           });
-            loader.classList.add('hide');
+           
       }
     finally {
-         loader.classList.add('hide');
+        
         formSearch.reset();
     }
     
@@ -75,13 +75,12 @@ async function handleSubmit(event) {
 async function loadNextPage() {
     page += 1;
     buttonLoad.disabled = true;
-
-
-
+  loader.classList.remove('.hide');
+  
     try {
-        const data = await searchPhoto(inputSearchValue, page);
-        const totalPages = Math.ceil(data.totalHits / per_page);
-
+      const data = await searchPhoto(inputSearchValue, page);
+      const totalPages = Math.ceil(data.totalHits / per_page);
+      
         list.insertAdjacentHTML('beforeend', createMarkup(data.hits));
         buttonLoad.disabled = false;
         lightbox.refresh();
@@ -114,5 +113,8 @@ async function loadNextPage() {
             messageColor: 'white',
             timeout: 2000,
         });
-    }
+  }
+  finally {
+     loader.classList.add('hide');
+  }
 };
