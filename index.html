@@ -9,7 +9,7 @@
     <script type="module" crossorigin src="/goit-js-hw-12/commonHelpers.js"></script>
     <link rel="modulepreload" crossorigin href="/goit-js-hw-12/assets/vendor-eded45c0.js">
     <link rel="stylesheet" href="/goit-js-hw-12/assets/vendor-4b066c51.css">
-    <link rel="stylesheet" href="/goit-js-hw-12/assets/index-9733aac0.css">
+    <link rel="stylesheet" href="/goit-js-hw-12/assets/index-b0deaa59.css">
   </head>
   <body>
    <!--  <header class="header">
@@ -28,8 +28,8 @@
  -->
 
      <section>
-    <h1 hidden>Search PhotoCard</h1>
-  </section>
+      <h1 hidden>Search PhotoCard</h1>
+    </section>
 
 
   <form type="submit" class="search__form js__search-form">
@@ -41,9 +41,11 @@
   </form>
  <!--  <span class="loader hide">Loading...</span> -->
   <ul class="js__list gallery"></ul>
-  <span class="loader hide"></span>
-  <button type="button" class="button__load-btn load-more-hidden">Load more</button>
+  <div class="container">
 
+    <span class="loader js__loader hide"></span>
+    <button type="button" class="button__load-btn load-more-hidden">Load more</button>
+  </div>
   
    
 
