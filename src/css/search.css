@@ -97,6 +97,8 @@
       font-family: Arial, Helvetica, sans-serif;
       font-weight: 400;
       position: relative;
+      left: 50%;
+      transform: translateX(-50%);
     }
     .loader:after{
       content: 'Loading';
@@ -113,7 +115,7 @@
       bottom: 0px;
       background: linear-gradient(#FF3D00 100%, transparent 0) no-repeat;
       background-size: 0% auto;
-      animation: 5s lineGrow linear infinite;
+      animation: 2s lineGrow linear infinite;
     }
 
     @keyframes lineGrow {to {  background-size: 100% auto}}

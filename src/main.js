@@ -16,7 +16,7 @@ let lightbox = new SimpleLightbox('.gallery a', {
 
 const formSearch = document.querySelector('.js__search-form');
 const list = document.querySelector('.js__list');
-const loader = document.querySelector('.loader');
+const loader = document.querySelector('.js__loader');
 const buttonLoad = document.querySelector('.button__load-btn');
 
 let inputSearchValue;
@@ -26,95 +26,92 @@ let per_page = 15;
 formSearch.addEventListener('submit', handleSubmit);
 buttonLoad.addEventListener('click', loadNextPage);
 
-
 async function handleSubmit(event) {
-    event.preventDefault();
-   
-    inputSearchValue = formSearch.elements.picture.value.trim();
-    list.innerHTML = "";
-    loader.classList.remove('.hide');
-    
-    try {
-        const data = await searchPhoto(inputSearchValue, page);
-        if (!inputSearchValue) {
-             iziToast.error({
-               title: 'Error',
-               message: 'Sorry, your request is not correct. Please try again!',
-             });
-            
-             return;
-        } else {
-          list.insertAdjacentHTML('beforeend', createMarkup(data.hits));
-          lightbox.refresh();
-            const totalPages = Math.ceil(data.totalHits / per_page);
-            
-          if (page < totalPages) {
-              buttonLoad.classList.replace("load-more-hidden", "load-more");
-          }
-        }
-    } catch(error) {
-          iziToast.error({
-            title: 'Error',
-            message:
-              'Sorry, there are no images matching your search query. Please try again!',
-            position: 'bottomCenter',
-            transitionIn: 'bounceInUp',
-            messageColor: 'white',
-            timeout: 2000,
-          });
-           
-      }
-    finally {
-        
-        formSearch.reset();
-    }
-    
-};
-
-
-async function loadNextPage() {
-    page += 1;
-    buttonLoad.disabled = true;
-  loader.classList.remove('.hide');
+  event.preventDefault();
+  inputSearchValue = formSearch.elements.picture.value.trim();
+  list.innerHTML = '';
+  page = 1;
+  buttonLoad.classList.replace('load-more', 'load-more-hidden');
   
-    try {
-      const data = await searchPhoto(inputSearchValue, page);
-      const totalPages = Math.ceil(data.totalHits / per_page);
-      
-        list.insertAdjacentHTML('beforeend', createMarkup(data.hits));
-        buttonLoad.disabled = false;
-        lightbox.refresh();
 
-        const { height: cardHeight } = document
-          .querySelector('.gallery-item')
-          .getBoundingClientRect();
-        window.scrollBy({
-          top: Math.round(cardHeight) * 2,
-          behavior: 'smooth',
-        });
+  if (!inputSearchValue) {
+    iziToast.error({
+      title: 'Error',
+      message: 'Sorry, your request is not correct. Please try again!',
+      timeout: 2000,
+    });
+    return;
+  }
 
+  try {
+    const data = await searchPhoto(inputSearchValue, page);
+     
+    list.insertAdjacentHTML('beforeend', createMarkup(data.hits));
+    lightbox.refresh();
 
+    const totalPages = Math.ceil(data.totalHits / per_page);
+    if (page < totalPages) {
+      buttonLoad.classList.replace('load-more-hidden', 'load-more');
+    } 
 
-        if (page >= totalPages) {
-            buttonLoad.classList.replace('load-more', 'load-more-hidden');
-            iziToast.show({
-                position: 'topRight',
-                message:
-                    "We're sorry, but you've reached the end of search results.",
-            });
-        }
-    } catch (error) {
-        iziToast.error({
-            title: 'Error',
-            message:
-                'Sorry, there are no images matching your search query. Please try again!',
-            position: 'bottomCenter',
-            transitionIn: 'bounceInUp',
-            messageColor: 'white',
-            timeout: 2000,
-        });
+  } catch (error) {
+    iziToast.error({
+      title: 'Error',
+      message:
+        'Sorry, there are no images matching your search query. Please try again!',
+      position: 'bottomCenter',
+      transitionIn: 'bounceInUp',
+      messageColor: 'white',
+      timeout: 2000,
+    });
   }
   finally {
-     loader.classList.add('hide');
+    
+    formSearch.reset();
   }
-};
+}
+
+async function loadNextPage() {
+  page += 1;
+  buttonLoad.disabled = true;
+  loader.classList.remove('hide');
+  buttonLoad.classList.replace('load-more', 'load-more-hidden');
+
+  try {
+    const data = await searchPhoto(inputSearchValue, page);
+    const totalPages = Math.ceil(data.totalHits / per_page);
+
+    list.insertAdjacentHTML('beforeend', createMarkup(data.hits));
+    buttonLoad.disabled = false;
+    lightbox.refresh();
+
+    const { height: cardHeight } = document
+      .querySelector('.gallery-item')
+      .getBoundingClientRect();
+    window.scrollBy({
+      top: Math.round(cardHeight) * 2,
+      behavior: 'smooth',
+    });
+
+    if (page >= totalPages) {
+      buttonLoad.classList.replace('load-more', 'load-more-hidden');
+      iziToast.show({
+        position: 'topRight',
+        message: "We're sorry, but you've reached the end of search results.",
+      });
+    }
+  } catch (error) {
+    iziToast.error({
+      title: 'Error',
+      message:
+        'Sorry, there are no images matching your search query. Please try again!',
+      position: 'bottomCenter',
+      transitionIn: 'bounceInUp',
+      messageColor: 'white',
+      timeout: 2000,
+    });
+  } finally {
+    loader.classList.add('hide');
+    buttonLoad.classList.replace('load-more-hidden', 'load-more');
+  }
+}
