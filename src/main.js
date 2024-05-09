@@ -45,15 +45,23 @@ async function handleSubmit(event) {
 
   try {
     const data = await searchPhoto(inputSearchValue, page);
-     
-    list.insertAdjacentHTML('beforeend', createMarkup(data.hits));
+    if (data.hits.length === 0) {
+      buttonLoad.classList.replace('load-more', 'load-more-hidden');
+       iziToast.error({
+         title: 'Error',
+         message:
+           'Sorry, there are no images matching your search query. Please try again!',
+       });
+    } else {
+       list.insertAdjacentHTML('beforeend', createMarkup(data.hits));
     lightbox.refresh();
 
     const totalPages = Math.ceil(data.totalHits / per_page);
     if (page < totalPages) {
       buttonLoad.classList.replace('load-more-hidden', 'load-more');
     } 
-
+ }
+   
   } catch (error) {
     iziToast.error({
       title: 'Error',
@@ -75,7 +83,7 @@ async function loadNextPage() {
   page += 1;
   buttonLoad.disabled = true;
   loader.classList.remove('hide');
-  buttonLoad.classList.replace('load-more', 'load-more-hidden');
+  
 
   try {
     const data = await searchPhoto(inputSearchValue, page);
@@ -97,6 +105,7 @@ async function loadNextPage() {
       buttonLoad.classList.replace('load-more', 'load-more-hidden');
       iziToast.show({
         position: 'topRight',
+        color: 'red',
         message: "We're sorry, but you've reached the end of search results.",
       });
     }
@@ -112,6 +121,6 @@ async function loadNextPage() {
     });
   } finally {
     loader.classList.add('hide');
-    buttonLoad.classList.replace('load-more-hidden', 'load-more');
+   
   }
 }
